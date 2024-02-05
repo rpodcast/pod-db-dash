@@ -1,0 +1,11 @@
+# rstudio-specific files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+
+# container-specific files
+.devcontainer/.rstudio_config/*
+!.devcontainer/.rstudio_config/README.md
+.devcontainer/.env
