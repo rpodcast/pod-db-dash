@@ -5,7 +5,7 @@ FROM ghcr.io/rocker-org/devcontainer/tidyverse:4.3
 # key dependencies for utilities
 RUN apt-get update -qq \
   && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get -y install --no-install-recommends libxt6 curl libglpk-dev libcurl4-openssl-dev libssl-dev libxml2-dev
+  && apt-get -y install --no-install-recommends libxt6 curl libglpk-dev libcurl4-openssl-dev libssl-dev libxml2-dev libarchive-dev
 
 # install rpython and pip3 just in case
 RUN apt-get update \
@@ -25,5 +25,5 @@ RUN apt-get update \
 
 # install R package dependencies
 # add / remove packages from line below (but keep renv=
-RUN install2.r renv 
+RUN install2.r renv shiny shinylive reactable httpuv arrow fs s3fs dplyr pointblank gt reclin2 epoxy logger purrr deps
 

@@ -4,6 +4,7 @@
 .RData
 .Ruserdata
 .DS_Store
+.Renviron
 
 # container-specific files
 .devcontainer/.rstudio_config/*
