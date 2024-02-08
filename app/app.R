@@ -1,4 +1,6 @@
 library(shiny)
+library(pointblank)
+library(gt)
 source("R/utils.R")
 
 # Define UI for app that draws a histogram ----
@@ -26,7 +28,9 @@ ui <- fluidPage(
     mainPanel(
 
       # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
+      gt_output("gt_table"),
+      #plotOutput(outputId = "distPlot"),
+      verbatimTextOutput("df")
 
     )
   )
@@ -35,6 +39,8 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
 
+  dupdf <- podcastdb_dupdf_object()
+  pb_object <- podcastdb_pointblank_object()
   # Histogram of the Old Faithful Geyser Data ----
   # with requested number of bins
   # This expression that generates a histogram is wrapped in a call
@@ -43,16 +49,26 @@ server <- function(input, output) {
   # 1. It is "reactive" and therefore should be automatically
   #    re-executed when inputs (input$bins) change
   # 2. Its output type is a plot
-  output$distPlot <- renderPlot({
+  # output$distPlot <- renderPlot({
 
-    x    <- faithful$waiting
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+  #   x    <- faithful$waiting
+  #   bins <- seq(min(x), max(x), length.out = input$bins + 1)
 
-    hist(x, breaks = bins, col = "#75AADB", border = "white",
-         xlab = "Waiting time to next eruption (in mins)",
-         main = "Histogram of waiting times")
+  #   hist(x, breaks = bins, col = "#75AADB", border = "white",
+  #        xlab = "Waiting time to next eruption (in mins)",
+  #        main = "Histogram of waiting times")
 
-    })
+  #   })
+
+  output$df <- renderPrint({
+    str(dupdf)
+  })
+
+  output$gt_table <- render_gt({
+    get_agent_report(pb_object, display_table = FALSE)
+  })
+
+
 
 }
 
