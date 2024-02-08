@@ -1,0 +1,4 @@
+default:
+  pointblank_object_path: "https://podcast20-projects.us-east-1.linodeobjects.com/exports/podcastdb_pointblank_object/podcastdb_pointblank_object"
+  podcast_dup_df_path: "https://podcast20-projects.us-east-1.linodeobjects.com/exports/podcast_dup_df.rds"
+  
