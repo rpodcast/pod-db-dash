@@ -19,10 +19,24 @@ podcastdb_pointblank_object <- function() {
 }
 
 podcastdb_dupdf_object <- function() {
-  tmp_file <- tempfile(pattern = "pointblank")
+  tmp_file <- tempfile(pattern = "dupdf")
 
   download.file(
     url = config::get("podcast_dup_df_path"),
+    destfile = tmp_file
+  )
+
+  res <- readRDS(tmp_file)
+
+  unlink(tmp_file)
+  return(res)
+}
+
+podcastdb_analysisdf_object <- function() {
+  tmp_file <- tempfile(pattern = "analysisdf")
+
+  download.file(
+    url = config::get("podcast_analysis_df_path"),
     destfile = tmp_file
   )
 
