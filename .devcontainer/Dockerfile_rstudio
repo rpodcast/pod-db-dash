@@ -25,7 +25,6 @@ RUN apt-get update \
 
 # install R package dependencies
 # add / remove packages from line below (but keep renv=
-RUN install2.r renv shiny shinylive reactable httpuv arrow fs s3fs dplyr pointblank gt reclin2 epoxy logger purrr deps rhino reactable.extras crosstalk reactablefmtr
+RUN install2.r renv shiny shinylive reactable httpuv arrow fs s3fs dplyr pointblank gt reclin2 epoxy logger purrr deps rhino reactable.extras crosstalk reactablefmtr anytime
 
-RUN installGithub.r timelyportfolio/dataui
 

@@ -13,7 +13,7 @@ format:
 execute: 
   echo: false
 params:
-  dev_mode: false
+  dev_mode: true
   pointblank_object_path: "https://podcast20-projects.us-east-1.linodeobjects.com/exports/podcastdb_pointblank_object/podcastdb_pointblank_object"
   podcast_dup_df_path: "https://podcast20-projects.us-east-1.linodeobjects.com/exports/podcast_dup_df.rds"
   podcast_analysis_df_path: "https://podcast20-projects.us-east-1.linodeobjects.com/exports/analysis_metrics_df.rds"
@@ -81,6 +81,10 @@ list(
 # re-order columns
 analysis_metrics_df <- analysis_metrics_df |>
   select(record_group, n_records, everything())
+
+if (params$dev_mode) {
+  analysis_metrics_df <- dplyr::slice(analysis_metrics_df, 1:30)
+}
 
 record_analysis_table(analysis_metrics_df, podcast_dup_df, report_date = podcast_db_date)
 ```
