@@ -118,3 +118,7 @@ pointblank_table(pointblank_object, report_date = podcast_db_date, extracts = pb
 # Methodology
 
 {{< include methods.md >}}
+
+# About
+
+{{< include about.md >}}
