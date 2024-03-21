@@ -1,12 +1,14 @@
 ---
-title: "My Dashboard"
+title: "PodcastIndex Dashboard"
 format: 
   dashboard:
     logo: assets/img/brand-icon.svg
     nav-buttons:
       - github
       - icon: mastodon
-        href: https://podcastindex.social
+        href: https://podcastindex.social/@rpodcast
+      - icon: twitter
+        href: https://twitter.com/theRcast  
       - icon: broadcast-pin
         href: https://podcastindex.org
     theme: [cosmo, custom.scss]
@@ -23,6 +25,7 @@ params:
 
 ```{r}
 #| context: setup
+#| label: setup-chunk
 
 # load packages
 library(reactable)
@@ -40,7 +43,7 @@ source("R/fct_tables.R")
 pointblank_object <- podcastdb_pointblank_object(url = params$pointblank_object_path, dev_mode = params$dev_mode)
 podcast_dup_df <- podcastdb_dupdf_object(url = params$podcast_dup_df_path, dev_mode = params$dev_mode)
 analysis_metrics_df <- podcastdb_analysisdf_object(url = params$podcast_analysis_df_path, dev_mode = params$dev_mode)
-podcast_db_date  <- podcastdb_log_object(root_url = params$podcast_log_path, date = "2024-03-11") |> date_report()
+podcast_db_date  <- podcastdb_log_object(root_url = params$podcast_log_path, date = as.character(lubridate::today())) |> date_report()
 ```
 
 # Duplicates
@@ -100,7 +103,7 @@ pb_extracts <- get_data_extracts(pointblank_object)
 pb_extracts <- purrr::map_at(
   pb_extracts,
   c('1', '3', '4', '7'),
-  ~clean_podcast_df(.x)
+  ~clean_podcast_df(.x, dev_mode = params$dev_mode)
 )
 ```
 
@@ -112,6 +115,6 @@ pointblank_table(pointblank_object, report_date = podcast_db_date, extracts = pb
 ```
 :::
 
-# About
+# Methodology
 
-Add more here
+{{< include methods.md >}}

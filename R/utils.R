@@ -97,7 +97,7 @@ gen_categories_df <- function(data) {
   return(data_sum)
 }
 
-clean_podcast_df <- function(podcast_dup_df) {
+clean_podcast_df <- function(podcast_dup_df, dev_mode = FALSE) {
   df <- podcast_dup_df |>
   tibble::as_tibble() |>
   mutate(newestItemPubdate = na_if(newestItemPubdate, 0),
@@ -136,6 +136,8 @@ clean_podcast_df <- function(podcast_dup_df) {
     ) |>
     dplyr::select(-newestItemPubdate, -oldestItemPubdate, -createdOn, -lastUpdate) |>
     dplyr::select(imageUrl, podcastGuid, title, url, lastUpdate_p, newestEnclosureDuration, newestItemPubdate_p, oldestItemPubdate_p, episodeCount, everything())
+
+  if (dev_mode) df <- dplyr::slice(df, 1:100)
 
   return(df)
 }
