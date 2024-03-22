@@ -13,5 +13,6 @@ Much like the ethos behind podcasting 2.0, the PodcastIndex Dashboard is proudly
 <h3>Analysis Pipeline</h3>
 
 The duplicate records and data quality analysis pipelines are executed weekly (after the Podcast Index SQLite database is refreshed) as scheduled GitHub Action workflows. Visit the GitHub repository at <https://github.com/rpodcast/pod-db-checker> to find the following scripts:
+
 * [`duplicate_runner.R`](https://github.com/rpodcast/pod-db-checker/blob/main/duplicate_runner.R): Performs duplication analysis and necessary data pre-processing.
 * [`pointblank_runner.R`](https://github.com/rpodcast/pod-db-checker/blob/main/pointblank_runner.R): Execute data quality checks with the `{pointblank}` package.
