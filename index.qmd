@@ -12,6 +12,7 @@ format:
       - icon: broadcast-pin
         href: https://podcastindex.org
     theme: [cosmo, custom.scss]
+    fig-cap-location: top
 execute: 
   echo: false
 params:
@@ -21,6 +22,14 @@ params:
   podcast_analysis_df_path: "https://podcast20-projects.us-east-1.linodeobjects.com/exports/analysis_metrics_df.rds"
   podcast_log_path: "https://podcast20-projects.us-east-1.linodeobjects.com/logs/"
 ---
+
+```{css}
+/*| echo: false */
+figcaption {
+  margin: auto;
+  text-align: center;
+}
+```
 
 
 ```{r}
