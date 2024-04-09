@@ -1,3 +1,5 @@
+![[rpodcast@getalby.com](https://getalby.com/p/rpodcast)](assets/img/lightning_qr_code.png){width=10%}
+
 <h3>Tech Stack</h3>
 
 Much like the ethos behind podcasting 2.0, the PodcastIndex Dashboard is proudly built on the foundations of open-source:
@@ -17,4 +19,3 @@ The duplicate records and data quality analysis pipelines are executed weekly (a
 * [`duplicate_runner.R`](https://github.com/rpodcast/pod-db-checker/blob/main/duplicate_runner.R): Performs duplication analysis and necessary data pre-processing.
 * [`pointblank_runner.R`](https://github.com/rpodcast/pod-db-checker/blob/main/pointblank_runner.R): Execute data quality checks with the `{pointblank}` package.
 
-![[rpodcast@getalby.com](https://getalby.com/p/rpodcast)](assets/img/lightning_qr_code.png){width=20%}
