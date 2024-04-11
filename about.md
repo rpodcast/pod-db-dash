@@ -1,3 +1,11 @@
+<h3>Value 4 Value in Action</h3>
+
+The [Podcast Index](https://podcastindex.org) is an independent and open catalog of podcasts feeds serving as the backbone of what is referred to as the Podcasting 2.0 initiative. The data contained in the Podcast Index is available through a robust [REST API](https://podcastindex-org.github.io/docs-api/#overview--libraries) as well as a [SQLite database](https://public.podcastindex.org/podcastindex_feeds.db.tgz) updated every week. 
+
+The PodcastIndex Dashboard is my attempt to give back to the amazing Podcasting 2.0 initiative. A key concept that drives the engagement and enthusiasm in this community is the unique ways each of us can contribute time, talent, and treasure to benefit everyone. 
+
+In previous episodes of [Podcasting 2.0](https://podcastindex.org/podcast/920666), Dave Jones lamented that duplicate podcast entries in the Podcast Index can cause annoying issues for many podcast apps and other services relying on the integrity of the index. Seeing an opportunity to help this amazing project, I sent a boost to the show in [episode 156](https://podverse.fm/episode/hLh98zHNo) to offer up a new solution powered by the R statistical computing language for identifiying potential duplicates alongside other data quality issues. Hence the objectives of this dashboard are to highlight potential duplicate podcast entries as well as perform quality assessments of the index to highlight potential issues.
+
 ![[rpodcast@getalby.com](https://getalby.com/p/rpodcast)](assets/img/lightning_qr_code.png){width=10%}
 
 <h3>Tech Stack</h3>
