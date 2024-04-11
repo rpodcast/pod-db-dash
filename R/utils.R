@@ -68,6 +68,21 @@ podcastdb_log_object <- function(root_url, date = format(Sys.time(), "%Y-%m-%d")
   return(res)
 }
 
+podcastdb_timestamp_object <- function(url, dev_mode = FALSE) {
+  if (dev_mode) {
+    tmp_file <- "dev_files/job_timestamp.txt"
+  } else {
+    tmp_file <- tempfile(pattern = "job_timestamp")
+
+    download.file(
+      url = url,
+      destfile = tmp_file
+    )
+  }
+  res <- readLines(tmp_file)
+  return(res)
+}
+
 date_report <- function(log_object, tz = "UTC") {
   dt <- log_object |>
     filter(arg1 == "Downloading podcast database") |>
