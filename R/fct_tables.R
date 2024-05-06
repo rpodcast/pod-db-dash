@@ -388,6 +388,9 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL) {
       itunesId = colDef(
         show = FALSE
       ),
+      itunesIdText = colDef(
+        show = FALSE
+      ),
       originalUrl = colDef(
         name = "Original URL",
         cell = function(value) {
