@@ -21,6 +21,35 @@ podcastdb_pointblank_object <- function(url, dev_mode = FALSE) {
   return(res)
 }
 
+get_pointblank_data_extracts <- function(pointblank_object, exports_root_path, dev_mode = FALSE) {
+  meta_df <- pointblank_object$validation_set
+
+  failed_i_values <- meta_df |>
+    dplyr::filter(!all_passed) |>
+    dplyr::pull(i)
+
+  failed_step_id_values <- meta_df |>
+    dplyr::filter(!all_passed) |>
+    dplyr::pull(step_id)
+
+  extract_list <- purrr::map(failed_step_id_values, ~{
+    if (dev_mode) {
+      tmp_file <- glue::glue("dev_files/{.x}.rds")
+    } else {
+      tmp_file <- tempfile(pattern = .x)
+      download.file(
+        url = paste0(url, glue::glue("/{.x}.rds")),
+        destfile = tmp_file
+      )
+    }
+    res <- readRDS(tmp_file)
+    return(res)
+  })
+
+  names(extract_list) <- failed_step_id_values
+  return(extract_list)
+}
+
 podcastdb_dupdf_object <- function(url, dev_mode = FALSE) {
   if (dev_mode) {
     tmp_file <- "dev_files/podcast_dup_df.rds"

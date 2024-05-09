@@ -61,13 +61,16 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
         TRUE ~ "darkgreen"
       )
     ) |>
-    select(label, n, all_passed, proc_duration_s, n_passed, n_failed, f_passed, f_failed, step_id, assertion_type, all_passed_colors, all_passed_icons, f_passed_colors, i)
+    select(label, brief, n, all_passed, proc_duration_s, n_passed, n_failed, f_passed, f_failed, step_id, assertion_type, all_passed_colors, all_passed_icons, f_passed_colors, i)
 
   tbl <- reactable::reactable(
     df,
     details = function(index) {
       all_passed <- dplyr::slice(df, index) |>
         dplyr::pull(all_passed)
+
+      preprocessing_note <- dplyr::slice(df, index) |>
+        dplyr::pull(brief)
 
       if (!all_passed) {
         step_index <- dplyr::slice(df, index) |>
@@ -81,24 +84,33 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
           dplyr::pull(assertion_type)
 
         if (!is.null(extracts)) {
-          extract_df <- extracts[[step_index]]
+          extract_df <- extracts[[step_id]]
         } else {
           extract_df <- get_data_extracts(pointblank_object, step_index)
         }
 
-        if (assertion_type == "rows_distinct") {
-          reactable(
-            dplyr::distinct(extract_df),
-            filterable = TRUE
-          )
-        } else {
-          record_detail_table(
-            extract_df,
-            preprocess = FALSE,
-            nrow = 1000
-            #clean_podcast_df(extract_df)
-          )
-        }
+        #reactable::reactable(extract_df)
+        record_detail_table(
+          extract_df,
+          preprocess = FALSE,
+          nrow = 1000,
+          preprocessing_note = preprocessing_note
+        )
+
+        # if (assertion_type == "rows_distinct") {
+        #   reactable(
+        #     dplyr::distinct(extract_df),
+        #     filterable = TRUE
+        #   )
+        # } else {
+        #   record_detail_table(
+        #     extract_df,
+        #     preprocess = FALSE,
+        #     nrow = 1000,
+        #     preprocessing_note = preprocessing_note
+        #     #clean_podcast_df(extract_df)
+        #   )
+        # }
       }
     },
     columns = list(
@@ -106,6 +118,7 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
         name = "Assessment",
         width = 350
       ),
+      brief = colDef(show = FALSE),
       all_passed = colDef(
         name = "Passed",
         width = 150,
@@ -288,7 +301,7 @@ record_analysis_table <- function(df, podcast_dup_df, report_date) {
   return(tbl)
 }
 
-record_detail_table <- function(df, preprocess = TRUE, nrow = NULL) {
+record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessing_note = NULL) {
   if (preprocess) {
     # obtain categories df
     cat_df <- gen_categories_df(df)
@@ -323,6 +336,7 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL) {
     df,
     defaultColDef = colDef(vAlign = "center", headerClass = "header"),
     columns = list(
+      #imageUrl = colDef(show = FALSE),
       imageUrl = colDef(
         name = NULL,
         maxWidth = 70,
@@ -498,5 +512,6 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL) {
     ),
     theme = podcast_db_theme()
     #elementId = paste0('detail-table-', record_group)
-  )
+  ) |>
+    reactablefmtr::add_title(title = preprocessing_note)
 }
