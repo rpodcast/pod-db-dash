@@ -38,7 +38,7 @@ get_pointblank_data_extracts <- function(pointblank_object, exports_root_path, d
     } else {
       tmp_file <- tempfile(pattern = .x)
       download.file(
-        url = paste0(url, glue::glue("/{.x}.rds")),
+        url = paste0(exports_root_path, glue::glue("{.x}.rds")),
         destfile = tmp_file
       )
     }
