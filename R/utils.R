@@ -43,6 +43,7 @@ get_pointblank_data_extracts <- function(pointblank_object, exports_root_path, d
       )
     }
     res <- readRDS(tmp_file)
+    if (dev_mode) res <- dplyr::slice(res, 1:30)
     return(res)
   })
 
