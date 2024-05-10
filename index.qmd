@@ -135,3 +135,7 @@ pointblank_table(pointblank_object, report_date = podcast_db_date, extracts = pb
 # About {orientation="columns"}
 
 {{< include about.qmd >}}
+
+# Changelog
+
+{{< include NEWS.md >}}
