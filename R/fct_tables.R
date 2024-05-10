@@ -101,7 +101,7 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
           ),
           record_detail_table(
             extract_df,
-            preprocess = FALSE,
+            preprocess = TRUE,
             nrow = 1000,
             preprocessing_note = preprocessing_note
           ),
@@ -157,12 +157,6 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
       ),
       f_passed = colDef(
         name = "Percent Records Pass",
-        # cell = data_bars(
-        #   df,
-        #   box_shadow = TRUE,
-        #   fill_color_ref = "f_passed_colors",
-        #   number_fmt = scales::percent_format(accuracy = 0.001)
-        # )
         cell = color_tiles(
           df,
           bias = 1.8,
@@ -291,28 +285,35 @@ record_analysis_table <- function(df, podcast_dup_df, report_date) {
 record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessing_note = NULL) {
   if (preprocess) {
     # obtain categories df
-    cat_df <- gen_categories_df(df)
+    #cat_df <- gen_categories_df(df)
 
     # preprocessing
     df <- df |>
-      dplyr::select(!starts_with("category")) |>
-      left_join(cat_df, by = "id") |>
       dplyr::mutate(
         episodeCount_colors = dplyr::case_when(
-          episodeCount >= 0 ~ 'darkgreen',
-          TRUE ~ 'orange'
+          episodeCount < 1 ~ "#e00000",
+          episodeCount >= 1 & episodeCount < 5 ~ "#fb9332",
+          TRUE ~ '#0c7a36'
         )
       ) |>
       dplyr::mutate(
-        imageUrl = dplyr::case_when(
+        lastHttpStatus_colors = dplyr::case_when(
+          lastHttpStatus == 200 ~ "#008000",
+          TRUE ~ "#e00000"
+        )
+      ) |>
+      dplyr::mutate(
+        imageUrl_clean = dplyr::case_when(
           imageUrl == "" ~ "https://podcastindex.org/images/no-cover-art.png",
           stringr::str_length(imageUrl) < 29 ~ "https://podcastindex.org/images/no-cover-art.png",
           !grepl("https|http", imageUrl) ~ "https://podcastindex.org/images/no-cover-art.png",
           .default = imageUrl
         )
       ) |>
-      dplyr::select(-newestItemPubdate, -oldestItemPubdate, -createdOn, -lastUpdate) |>
-      dplyr::select(imageUrl, podcastGuid, title, url, lastUpdate_p, newestEnclosureDuration, newestItemPubdate_p, oldestItemPubdate_p, episodeCount, everything())
+      #dplyr::select(-newestItemPubdate, -oldestItemPubdate, -createdOn, -lastUpdate) |>
+      dplyr::select(imageUrl_clean, podcastGuid, title, url, lastUpdate_p, newestEnclosureDuration, newestItemPubdate_p, oldestItemPubdate_p, episodeCount, everything())
+
+    df <- dplyr::select(df, -any_of(c("newestItemPubdate", "oldestItemPubdate", "createdOn", "lastUpdate")))
   }
 
   if (!is.null(nrow)) {
@@ -323,8 +324,8 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
     df,
     defaultColDef = colDef(vAlign = "center", headerClass = "header"),
     columns = list(
-      #imageUrl = colDef(show = FALSE),
-      imageUrl = colDef(
+      imageUrl = colDef(show = FALSE),
+      imageUrl_clean = colDef(
         name = "",
         maxWidth = 70,
         align = "center",
@@ -372,13 +373,17 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
       ),
       lastHttpStatus = colDef(
         name = "HTTP Status",
-        style = function(value) {
-          if (value == 200L) {
-            color <- "#008000"
-          } else {
-            color <- "#e00000"
-          }
-        }
+        cell = reactablefmtr::color_tiles(
+          df,
+          color_ref = 'lastHttpStatus_colors'
+        )
+        # style = function(value) {
+        #   if (value == 200L) {
+        #     color <- "#008000"
+        #   } else {
+        #     color <- "#e00000"
+        #   }
+        # }
       ),
       dead = colDef(
         show = FALSE
@@ -390,7 +395,8 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
         show = FALSE
       ),
       itunesIdText = colDef(
-        show = FALSE
+        name = "itunesId",
+        show = TRUE
       ),
       originalUrl = colDef(
         name = "Original URL",
@@ -430,7 +436,10 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
       ),
       episodeCount = colDef(
         name = "Episodes",
-        style = reactablefmtr::color_scales(df, color_ref = 'episodeCount_colors')
+        cell = reactablefmtr::color_tiles(
+          df,
+          color_ref = 'episodeCount_colors'
+        )
       ),
       popularityScore = colDef(
         name = "Popularity Score",
@@ -450,11 +459,11 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
         show = FALSE
       ),
       chash = colDef(
-        show = FALSE
+        show = TRUE
       ),
       host = colDef(
         name = "Host",
-        show = FALSE
+        show = TRUE
       ),
       newestEnclosureUrl = colDef(
         name = "Newest Enclosure URL",
@@ -485,6 +494,9 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
         #format = colFormat(separators = TRUE)
       ),
       episodeCount_colors = colDef(
+        show = FALSE
+      ),
+      lastHttpStatus_colors = colDef(
         show = FALSE
       ),
       created_timespan_days = colDef(
