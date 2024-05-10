@@ -57,13 +57,6 @@ pointblank_object <- podcastdb_pointblank_object(url = params$pointblank_object_
 podcast_dup_df <- podcastdb_dupdf_object(url = params$podcast_dup_df_path, dev_mode = params$dev_mode)
 analysis_metrics_df <- podcastdb_analysisdf_object(url = params$podcast_analysis_df_path, dev_mode = params$dev_mode)
 podcast_db_date <- podcastdb_timestamp_object(url = params$podcast_timestamp_path, dev_mode = params$dev_mode)
-
-# if (!params$dev_mode) {
-#   podcast_db_date  <- podcastdb_log_object(root_url = params$podcast_log_path, date = as.character(lubridate::today())) |> date_report()
-# } else {
-#   podcast_db_date <- "20XX-XX-XX"
-# }
-
 ```
 
 # Duplicates
