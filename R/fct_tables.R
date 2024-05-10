@@ -189,7 +189,7 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
 record_analysis_table <- function(df, podcast_dup_df, report_date) {
   tbl <- reactable::reactable(
     df,
-    wrap = FALSE,
+    wrap = TRUE,
     resizable = TRUE,
     #selection = "single",
     #onClick = "select",
