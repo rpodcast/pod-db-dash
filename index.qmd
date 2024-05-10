@@ -14,6 +14,7 @@ format:
         href: https://podcastindex.org
     theme: [cosmo, custom.scss]
     fig-cap-location: top
+    scrolling: true
 execute: 
   echo: false
 params:
