@@ -7,6 +7,8 @@ podcastdb_pointblank_object <- function(url, dev_mode = FALSE) {
     tmp_file <- "dev_files/podcastdb_pointblank_object"
   } else {
     tmp_file <- tempfile(pattern = "pointblank")
+  }
+  if (!file.exists(tmp_file)) {
     download.file(
       url = url,
       destfile = tmp_file
@@ -37,6 +39,8 @@ get_pointblank_data_extracts <- function(pointblank_object, exports_root_path, d
       tmp_file <- glue::glue("dev_files/{.x}.rds")
     } else {
       tmp_file <- tempfile(pattern = .x)
+    }
+    if (!file.exists(tmp_file)) {
       download.file(
         url = paste0(exports_root_path, glue::glue("{.x}.rds")),
         destfile = tmp_file
@@ -56,7 +60,9 @@ podcastdb_dupdf_object <- function(url, dev_mode = FALSE) {
     tmp_file <- "dev_files/podcast_dup_df.rds"
   } else {
     tmp_file <- tempfile(pattern = "dupdf")
+  }
 
+  if (!file.exists(tmp_file)) {
     download.file(
       url = url,
       destfile = tmp_file
@@ -73,7 +79,8 @@ podcastdb_analysisdf_object <- function(url, dev_mode = FALSE) {
     tmp_file <- "dev_files/analysis_metrics_df.rds"
   } else {
     tmp_file <- tempfile(pattern = "analysisdf")
-
+  }
+  if (!file.exists(tmp_file)) {
     download.file(
       url = url,
       destfile = tmp_file
@@ -103,7 +110,9 @@ podcastdb_timestamp_object <- function(url, dev_mode = FALSE) {
     tmp_file <- "dev_files/job_timestamp.txt"
   } else {
     tmp_file <- tempfile(pattern = "job_timestamp")
+  }
 
+  if (!file.exists(tmp_file)) {
     download.file(
       url = url,
       destfile = tmp_file
