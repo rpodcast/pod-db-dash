@@ -89,28 +89,27 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
           extract_df <- get_data_extracts(pointblank_object, step_index)
         }
 
-        #reactable::reactable(extract_df)
-        record_detail_table(
-          extract_df,
-          preprocess = FALSE,
-          nrow = 1000,
-          preprocessing_note = preprocessing_note
-        )
+        extract_file <- paste0(step_id, ".parquet")
+        root_url <- "https://podcast20-projects.us-east-1.linodeobjects.com/exports/"
+        full_url <- paste0(root_url, extract_file)
+        download_url <- htmltools::tags$a(href = full_url, target = "_blank", "Download Full Extract")
 
-        # if (assertion_type == "rows_distinct") {
-        #   reactable(
-        #     dplyr::distinct(extract_df),
-        #     filterable = TRUE
-        #   )
-        # } else {
-        #   record_detail_table(
-        #     extract_df,
-        #     preprocess = FALSE,
-        #     nrow = 1000,
-        #     preprocessing_note = preprocessing_note
-        #     #clean_podcast_df(extract_df)
-        #   )
-        # }
+        div(
+          div(
+            class = "preprocessing-note",
+            htmltools::tags$p(preprocessing_note)
+          ),
+          record_detail_table(
+            extract_df,
+            preprocess = FALSE,
+            nrow = 1000,
+            preprocessing_note = preprocessing_note
+          ),
+          div(
+            class = "podcast-urls",
+            download_url
+          )
+        )
       }
     },
     columns = list(
@@ -120,7 +119,7 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
       ),
       brief = colDef(show = FALSE),
       all_passed = colDef(
-        name = "Passed",
+        name = "Result",
         width = 150,
         align = "center",
         cell = icon_sets(
@@ -157,38 +156,26 @@ pointblank_table <- function(pointblank_object, report_date, extracts = NULL) {
         show = FALSE
       ),
       f_passed = colDef(
-        name = "Records Pass",
-        cell = data_bars(
+        name = "Percent Records Pass",
+        # cell = data_bars(
+        #   df,
+        #   box_shadow = TRUE,
+        #   fill_color_ref = "f_passed_colors",
+        #   number_fmt = scales::percent_format(accuracy = 0.001)
+        # )
+        cell = color_tiles(
           df,
+          bias = 1.8,
           box_shadow = TRUE,
-          fill_color_ref = "f_passed_colors",
+          #fill_color_ref = "f_passed_colors",
           number_fmt = scales::percent_format(accuracy = 0.001)
         )
       ),
       f_passed_colors = colDef(show = FALSE),
       proc_duration_s = colDef(
-        show = FALSE
+        name = "Processing Time (seconds)"
       ),
-      step_id = colDef(
-        name = "Failed Extract Download Link",
-        na = "Not Applicable",
-        cell = function(value, index) {
-          all_passed <- dplyr::slice(df, index) |>
-            dplyr::pull(all_passed)
-
-          if (!all_passed) {
-            extract_file <- paste0(value, ".parquet")
-            root_url <- "https://podcast20-projects.us-east-1.linodeobjects.com/exports/"
-            full_url <- paste0(root_url, extract_file)
-            download_url <- htmltools::tags$a(href = full_url, target = "_blank", extract_file)
-
-            div(
-              class = "podcast-urls",
-              download_url
-            )
-          }
-        }
-      ),
+      step_id = colDef(show = FALSE),
       assertion_type = colDef(
         show = FALSE
       ),
@@ -332,13 +319,13 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
     df <- dplyr::slice(df, 1:nrow)
   }
   
-  reactable::reactable(
+  tbl_object <- reactable::reactable(
     df,
     defaultColDef = colDef(vAlign = "center", headerClass = "header"),
     columns = list(
       #imageUrl = colDef(show = FALSE),
       imageUrl = colDef(
-        name = NULL,
+        name = "",
         maxWidth = 70,
         align = "center",
         sticky = "left",
@@ -497,9 +484,6 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
         }
         #format = colFormat(separators = TRUE)
       ),
-      # record_group = colDef(
-      #   show = FALSE
-      # ),
       episodeCount_colors = colDef(
         show = FALSE
       ),
@@ -511,7 +495,7 @@ record_detail_table <- function(df, preprocess = TRUE, nrow = NULL, preprocessin
       )
     ),
     theme = podcast_db_theme()
-    #elementId = paste0('detail-table-', record_group)
-  ) |>
-    reactablefmtr::add_title(title = preprocessing_note)
+  )
+
+  return(tbl_object)
 }
