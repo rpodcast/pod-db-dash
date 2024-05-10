@@ -119,17 +119,11 @@ record_analysis_table(analysis_metrics_df, podcast_dup_df, report_date = podcast
 
 ```{r}
 #| label: process-pointblank-extracts
-#pb_extracts <- get_data_extracts(pointblank_object)
 pb_extracts <- get_pointblank_data_extracts(
   pointblank_object,
   exports_root_path = params$exports_root_path,
   dev_mode = params$dev_mode
 )
-# pb_extracts <- purrr::map_at(
-#   pb_extracts,
-#   c('1', '3', '4', '7'),
-#   ~clean_podcast_df(.x, dev_mode = params$dev_mode)
-# )
 ```
 
 ::: {.card title="Validation Summary"}
