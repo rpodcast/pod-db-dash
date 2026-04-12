@@ -19,45 +19,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install jq for parsing system dependencies
-        id: install-jq-step
-        uses: awalsh128/cache-apt-pkgs-action@latest
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
         with:
-          packages: jq
-          version: 1.0
+          logger: pretty
+          log-directives: nix_installer=trace
+          backtrace: full
 
-      - name: Install system dependencies
-        id: install-deps-step
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        env:
-          DEPS_ENV: ${{ steps.parse-dep-step.DEPS_ENV }}
-        with:
-          packages: libarchive-dev libcurl4-openssl-dev libssl-dev make
-
-      - name: Setup r2u
-        id: r2u-step
-        uses: eddelbuettel/github-actions/r2u-setup@master
-        
-      - name: SessionInfo
-        id: sessioninfo-step
-        run: R -q -e 'sessionInfo()'
-
-      - name: Install deps R package
-        id: r-pkg-deps-step
-        run: Rscript -e 'install.packages("deps")'
-        
-      - name: Package Dependencies
-        id: r-package-dependencies-step
-        # takes advantage of r2u to install the named CRAN packages as binaries
-        # in the r2u context we could also use script 'install.r' 
-        #run: Rscript -e 'install.packages(c("tinyspotifyr", "ggplot2", "anytime", "data.table", "tinythemes"))'
-        run: Rscript -e 'deps::install()'
-
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+      - name: Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+  
+      - name: Build development environment
+        run: |
+          nix-build
 
       - name: Render and Publish
-        uses: quarto-dev/quarto-actions/publish@v2
+        uses: b-rodrigues/quarto-nix-actions/publish@main
         with:
           target: gh-pages
           path: index.qmd

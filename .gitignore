@@ -16,3 +16,5 @@ index.html
 index.rmarkdown
 dev_files/*
 
+# nix files
+result
